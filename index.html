@@ -8,8 +8,20 @@
 </head>
 <body>
     <h2>Q1. Write one example explaining how you can write a callback function.</h2>
+    <pre>function perform(a, b, callback) {
+        const result = a + b;
+        callback(result); 
+    }
+    function update(result) {
+        const resultupdate = document.getElementById('q1');
+        resultupdate.textContent = `The result is: ${result}`;
+    }
+    
+    perform(5, 3, update);</pre>
     <p id="q1"></p>
     <h4><span>Reason:</span>In this example, we have two functions: perform and update. The perform function takes two numbers (a and b) and a callback function (callback) as arguments. It performs an operation on the numbers  and then calls the callback function with the result. We define a callback function called update that simply update the result to the resultupdate.When I call perform(5, 3, update), it adds 5 and 3 together and then calls the update function as a callback, which logs "The result is: 8" to the webpage. This is a simple example of how callback functions can be used in JavaScript to perform asynchronous .</h4><br>
+
+
     <h2>Q2. "Write a callback function to print numbers from 1 to 7, in which 1 should be printed after 1 sec, 2 should be printed after 2 sec, 3 should be printed after 3 sec, and so on. 
 
         Explain callback hell.
@@ -21,9 +33,36 @@
         5
         6
         7"</h2>
+        <pre>function printNumberWithDelay(number, delay, callback) {
+            setTimeout(function() {
+                const ques2 = document.getElementById('q2');
+                const listItem = document.createElement('li');
+                listItem.textContent = number;
+                ques2.appendChild(listItem);
+                callback();
+            }, delay);
+        }
+        
+        function printNumbersSequentially() {
+            let number = 1;
+        
+            function printNextNumber() {
+                if (number <= 7) {
+                    printNumberWithDelay(number, number * 1000, printNextNumber);
+                    number++;
+                }
+            }
+        
+            printNextNumber();
+        }
+        
+        printNumbersSequentially();</pre>
+        
         <ul id="q2"></ul>
         <h4><span>Reason:</span> Callback hell, also known as "Pyramid of Doom," is a situation in asynchronous JavaScript programming where I have a large number of nested callback functions, making the code difficult to read and maintain. This often occurs when dealing with multiple asynchronous operations that depend on each other.
         To mitigate callback hell, The Promise approaches make it easier to manage asynchronous operations and avoid deeply nested callbacks, leading to cleaner and more maintainable code.</h4><br>
+
+
         <h2>Q3. "Write the promise function to print numbers from 1 to 7, in which 1 should be printed after 1 sec, 2 should be printed after 2 sec, 3 should be printed after 3 sec, and so on. 
 
             Numbers
@@ -34,25 +73,174 @@
             5
             6
             7"</h2> 
+            <pre>function NumberDelay(number, delay) {
+                return new Promise((resolve) => {
+                    setTimeout(() => {
+                        const ques3 = document.getElementById('q3');
+                        const listItem = document.createElement('li');
+                        listItem.textContent = number;
+                        ques3.appendChild(listItem);
+                        resolve();
+                    }, delay);
+                });
+            }
+            
+            async function NumbersSequentially() {
+                for (let number = 1; number <= 7; number++) {
+                    await NumberDelay(number, number * 1000);
+                }
+            }
+            
+            NumbersSequentially()
+                .then(() => {
+                    console.log("All numbers printed.");
+                })
+                .catch((error) => {
+                    console.error("Error:", error);
+                });</pre>
             <ul id="q3"></ul>
             <h4><span>Reason:</span>The reason for this code is to demonstrate how to control the execution of asynchronous tasks in JavaScript using Promises and timeouts. It simulates a scenario where I want to perform actions with varying delays in a sequential order, which can be useful in various real-world applications like animations, network requests, or any situation where you need precise timing control.</h4><br>
 
             <h2>Q4. "Create a promise function accepting an argument, if yes is passed to the function then it should go to resolved state and print Promise Resolved, and if nothing is passed 
                 then it should go to reject the state and catch the error and print Promise Rejected "</h2>
+                <pre>function customPromise(value) {
+                    return new Promise((resolve, reject) => {
+                        if (value === 'yes') {
+                            resolve('Promise Resolved');
+                        } else {
+                            reject('Promise Rejected');
+                        }
+                    });
+                }
+            
+                const ul = document.getElementById('q4');
+            
+                // Example 1: Resolved promise
+                customPromise('yes')
+                    .then((result) => {
+                        ul.innerHTML += `<li>${result}</li>`;
+                    })
+                    .catch((error) => {
+                        ul.innerHTML += `<li>${error}</li>`;
+                    });
+            
+                // Example 2: Rejected promise
+                customPromise()
+                    .then((result) => {
+                        ul.innerHTML += `<li>${result}</li>`;
+                    })
+                    .catch((error) => {
+                        ul.innerHTML += `<li>${error}</li>`;
+                    });</pre>
                 <ul id="q4"></ul>
                 <h4><span>Reason:</span> The results are as expected because the Promise resolves or rejects based on the value of the argument passed to the customPromise function.</h4><br>
+
+
             <h2>Q5.Create examples to explain callback function</h2>
+            <pre>function greet(name, callback) {
+                const ques5 = document.getElementById('q5');
+                ques5.textContent = `Hello, ${name}!`;
+                callback();
+            }
+        
+            function sayGoodbye() {
+                const ques5 = document.getElementById('q5');
+                ques5.textContent += ' Goodbye!';
+            }
+            greet('Alice', sayGoodbye); </pre>
             <ul id="q5"></ul>
             <h4><span>Reason:</span> The reason for the output is that the greet function sets the initial greeting message, and then the sayGoodbye callback function modifies the content of the same element to include " Goodbye!"</h4><br>
+
+
             <h2>Q6. Create examples to explain callback hell function</h2>
+            <pre>function stepOne(callback) {
+                setTimeout(function () {
+                    console.log('Step 1 completed');
+                    callback();
+                }, 1000);
+            }
+        
+            function stepTwo(callback) {
+                setTimeout(function () {
+                    console.log('Step 2 completed');
+                    callback();
+                }, 1000);
+            }
+        
+            function stepThree(callback) {
+                setTimeout(function () {
+                    console.log('Step 3 completed');
+                    callback();
+                }, 1000);
+            }
+        
+            // The callback hell
+            stepOne(function () {
+                stepTwo(function () {
+                    stepThree(function () {
+                        // Nested steps are done
+                        const resultElement = document.getElementById('q6');
+                        resultElement.textContent = 'All steps completed!';
+                    });
+                });
+            });</pre>
             <p id="q6"></p>
             <h4><span>Reason:</span>The reason for the output is that the code simulates three asynchronous steps, each taking 1 second to complete. These steps are nested inside each other in a callback chain, and the final result is displayed on the webpage, indicating that all steps have been completed. This demonstrates callback hell, where deeply nested callbacks can make the code harder to read and maintain.</h4><br>
 
             <h2>Q7. Create examples to explain promises function</h2>
+            <pre>function simulateAsyncOperation(success) {
+                return new Promise((resolve, reject) => {
+                    setTimeout(() => {
+                        if (success) {
+                            resolve('Operation succeeded!');
+                        } else {
+                            reject('Operation failed!');
+                        }
+                    }, 1000);
+                });
+            }
+        
+            // Usage of the Promise
+            simulateAsyncOperation(true)
+                .then((result) => {
+                    const ques7 = document.getElementById('q7');
+                    ques7.textContent = result;
+                })
+                .catch((error) => {
+                    const ques7 = document.getElementById('q7');
+                    ques7.textContent = error;
+                });</pre>
             <p id="q7"></p>
             <h4><span>Reason:</span>The result displayed in the HTML element with id 'q7' depends on whether the Promise resolves successfully or is rejected based on the value of the success parameter passed to simulateAsyncOperation. If success is true, it will display 'Operation succeeded!', and if success is false, it will display 'Operation failed!'.</h4><br>
 
             <h2>Q8.Create examples to explain async await function</h2>
+            <pre>const username = 'octocat';
+                async function fetchGitHubUserData(username) {
+                    try {
+                        const response = await fetch(`https://api.github.com/users/${username}`);
+                        if (!response.ok) {
+                            throw new Error('Failed to fetch user data');
+                        }
+                        const userData = await response.json();
+                        return userData;
+                    } catch (error) {
+                        throw error;
+                    }
+                }
+                async function updateWebpage() {
+                    try {
+                        const userData = await fetchGitHubUserData(username);
+                        const usernameElement = document.getElementById('username');
+                        const avatarElement = document.getElementById('avatar');
+        
+                        usernameElement.textContent = userData.login;
+                        avatarElement.src = userData.avatar_url;
+                    } catch (error) {
+                        console.error('Error:', error.message);
+                    }
+                }
+        
+                updateWebpage();</pre>
             <div id="userInfo">
                 <p><strong>Username:</strong> <span id="username"></span></p>
                 <p><strong>Avatar:</strong> <img id="avatar" width="100" height="100" alt="User Avatar"></p>
@@ -60,6 +248,27 @@
             <h4><span>Reason:</span>The actual outcome will depend on the availability of the 'octocat' user on GitHub and the network status at the time you load the HTML page. If the user exists and the API is responsive, you will see their username and avatar. If there is an issue with the user's existence or a network problem, you will receive an error message.</h4><br>
 
             <h2>Q9. Create examples to explain promise.all function</h2>
+            <pre> function simulateAsyncOperation(id, duration) {
+                return new Promise(resolve => {
+                    setTimeout(() => {
+                        resolve(`Operation ${id} completed after ${duration} ms`);
+                    }, duration);
+                });
+            }
+        
+            // Define an array of asynchronous operations
+            const operations = [
+                simulateAsyncOperation(1, 2000),
+                simulateAsyncOperation(2, 1000),
+                simulateAsyncOperation(3, 1500),
+            ];
+        
+            // Use Promise.all to wait for all operations to complete
+            Promise.all(operations)
+                .then(results => {
+                    const q9 = document.getElementById('q9');
+                    q9.textContent = `Results: ${results.join(', ')}`;
+                });</pre>
             <p id="q9"></p>
             <h4><span>Reason:</span>In summary, the output shows the results of all three asynchronous operations, including their completion messages and durations, separated by commas. This demonstrates how Promise.all can be used to coordinate and wait for multiple asynchronous operations to complete before taking further action.</h4>
 
